@@ -52,7 +52,7 @@ package com.example.tests;
             // Login
             loginPage.goTo();
             ChainTestListener.log("Navigated to the login page");
-            loginPage.login("standard_user", "secret_sauce");
+            loginPage.login("standard_user", "secret_");
             ChainTestListener.log("Logged in with standard_user");
 
             // Add products to the cart
