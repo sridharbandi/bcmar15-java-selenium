@@ -30,7 +30,7 @@ jobs:
         path: target/reports
 
     - name: Deploy to GitHub Pages
-      if: success()
+      if: always()
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{secrets.GITHUB_TOKEN}}
