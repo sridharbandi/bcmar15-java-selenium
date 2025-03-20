@@ -8,3 +8,7 @@ phases:
     commands:
       - echo Running tests...
       - mvn clean test
+  artifacts:
+    files:
+      - target/reports/
+    discard-paths: yes
