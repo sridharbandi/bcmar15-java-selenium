@@ -10,5 +10,5 @@ phases:
       - mvn clean test
   artifacts:
     files:
-      - target/reports/
+      - target/reports/**/*
     discard-paths: yes
