@@ -12,6 +12,19 @@ steps:
         apt-get update &&
         apt-get install -y google-chrome-stable
 
+    # Install ChromeDriver with correct version
+  - name: 'ubuntu'
+    args:
+      - bash
+      - '-c'
+      - |
+        CHROME_VERSION=$(google-chrome --version | grep -oP '[0-9]+' | head -n 1) &&
+        CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION") &&
+        wget -N "https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip" &&
+        unzip chromedriver_linux64.zip -d /usr/local/bin &&
+        chmod +x /usr/local/bin/chromedriver &&
+        chromedriver --version
+
   # Run Selenium tests with Maven using JDK 17
   - name: 'maven:3.8.5-openjdk-17'
     entrypoint: 'mvn'
