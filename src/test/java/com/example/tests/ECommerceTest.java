@@ -39,7 +39,7 @@ package com.example.tests;
 
             options.addArguments("--headless");
             // Initialize WebDriver
-            driver = new RemoteWebDriver(new URL("http://localhost:3000/webdriver"), options);
+            driver = new RemoteWebDriver(new URL("http://selenium-hub:4444/wd/hub"), options);
             ChainTestListener.log("Launching the browser");
 
             // Initialize the page objects
