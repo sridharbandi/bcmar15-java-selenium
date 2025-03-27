@@ -33,6 +33,8 @@ package com.example.tests;
 
             options.addArguments("--disable-dev-shm-usage");
 
+            options.addArguments("--remote-allow-origins=*");
+
             options.addArguments("--headless");
             // Initialize WebDriver
             driver = new ChromeDriver(options);
