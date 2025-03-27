@@ -9,6 +9,8 @@ package com.example.tests;
     import org.testng.annotations.BeforeClass;
     import org.testng.annotations.Listeners;
     import org.testng.annotations.Test;
+    import org.openqa.selenium.remote.RemoteWebDriver;
+    import java.net.URL;
 
     import java.io.IOException;
     import java.nio.file.Files;
@@ -37,7 +39,7 @@ package com.example.tests;
 
             options.addArguments("--headless");
             // Initialize WebDriver
-            driver = new ChromeDriver(options);
+            driver = new RemoteWebDriver(new URL("http://localhost:3000/webdriver"), options);
             ChainTestListener.log("Launching the browser");
 
             // Initialize the page objects
