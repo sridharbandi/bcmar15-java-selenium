@@ -1,12 +1,16 @@
 steps:
-# Step 1: Install system dependencies and Chrome
-- name: 'docker'
-  args: ['run', '-d', '--name', 'browserless', '-p', '3000:3000', 'browserless/chrome']
+  # Step 1: Start Selenium Hub
+  - name: 'selenium/hub'
+    args: ['-D', 'hubPort=4444']
 
-  # Run Selenium tests with Maven using JDK 17
-- name: 'maven:3.8.5-openjdk-17'
-  entrypoint: 'mvn'
-  args: ['clean', 'test']
+  # Step 2: Start a Chrome Node connected to the Selenium Hub
+  - name: 'selenium/node-chrome'
+    args: ['-D', 'selenium.hub=http://selenium-hub:4444/wd/hub']
+
+  # Step 3: Run Maven tests using JDK 17
+  - name: 'maven:3.8.5-openjdk-17'
+    entrypoint: 'mvn'
+    args: ['clean', 'test']
 
 options:
   machineType: 'E2_HIGHCPU_8' # Optional: Use a more powerful machine if needed
