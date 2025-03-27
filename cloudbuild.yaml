@@ -1,12 +1,21 @@
 steps:
+# Step 1: Install Chrome and ChromeDriver
 - name: 'ubuntu'
   entrypoint: 'bash'
   args:
   - '-c'
   - |
-    # Update and install dependencies
+    # Update packages
     apt-get update -y
+    
+    # Install necessary dependencies
     apt-get install -y wget gnupg unzip curl
+
+    # Install Chrome
+    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+    echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
+    apt-get update
+    apt-get install -y google-chrome-stable
 
     # Get Chrome version
     CHROME_VERSION=$(google-chrome --version | cut -d ' ' -f 3 | cut -d '.' -f 1)
@@ -22,10 +31,6 @@ steps:
     mv chromedriver /usr/local/bin/chromedriver
     chmod +x /usr/local/bin/chromedriver
     rm chromedriver_linux64.zip
-
-    # List versions to verify
-    google-chrome --version
-    chromedriver --version
 
   # Run Selenium tests with Maven using JDK 17
 - name: 'maven:3.8.5-openjdk-17'
