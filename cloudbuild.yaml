@@ -1,17 +1,20 @@
 steps:
-  # Step 1: Start Selenium Hub and Chrome Node
+  # Step 1: Start Selenium Hub and Chrome Node using Docker Compose
   - name: 'docker/compose'
-    args: 
+    entrypoint: 'docker-compose'
+    args:
+      - '-f'
+      - 'selenium-hub-docker-compose.yml'
       - 'up'
       - '-d'
-    env:
-      - 'COMPOSE_FILE=selenium-hub-docker-compose.yml'
 
   # Step 2: Run Selenium tests with Maven using JDK 17
   - name: 'maven:3.8.5-openjdk-17'
     entrypoint: 'mvn'
-    args: ['clean', 'test']
-  
-  options: 
-    machineType: 'E2_HIGHCPU_8'
-    logging: CLOUD_LOGGING_ONLY
+    args:
+      - 'clean'
+      - 'test'
+
+options:
+  machineType: 'E2_HIGHCPU_8'  # Optional: Use a more powerful machine if needed
+  logging: CLOUD_LOGGING_ONLY
