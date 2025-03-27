@@ -10,9 +10,8 @@ steps:
   # Step 2: Run Selenium tests with Maven using JDK 17
   - name: 'maven:3.8.5-openjdk-17'
     entrypoint: 'mvn'
-    args: 
-      - 'clean'
-      - 'test'
+    args: ['clean', 'test']
+  
   options: 
     machineType: 'E2_HIGHCPU_8'
     logging: CLOUD_LOGGING_ONLY
