@@ -33,7 +33,7 @@ public class ECommerceTest {
         // Set Chrome options
         ChromeOptions options = new ChromeOptions();
         // Initialize WebDriver
-        driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hu"), options);
+        driver = new RemoteWebDriver(new URL("http://selenium-hub:4444/wd/hub"), options);
         ChainTestListener.log("Launching the browser");
 
         // Initialize the page objects

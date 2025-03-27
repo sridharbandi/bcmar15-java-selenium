@@ -16,7 +16,7 @@ steps:
       - |
         echo "Waiting for Selenium Hub to be ready..."
         # Wait for a few seconds to allow the services to start
-        sleep 10
+        sleep 30
 
   # Step 3: Run Selenium tests with Maven using JDK 17
   - name: 'maven:3.8.5-openjdk-17'
