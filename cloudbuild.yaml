@@ -17,9 +17,9 @@ steps:
         echo "Waiting for Selenium Hub to be ready..."
         # Wait for a few seconds to allow the services to start
         sleep 10
-        # Check if Selenium Hub is up and running
-        until $(curl --output /dev/null --silent --head --fail http://localhost:4444/wd/hub); do
-          printf '.'
+        # Check if Selenium Hub is up and running using netcat (nc)
+        while ! nc -z localhost 4444; do
+          echo "Waiting for Selenium Hub..."
           sleep 5
         done
         echo "Selenium Hub is up!"
