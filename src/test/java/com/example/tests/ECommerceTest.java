@@ -1,123 +1,117 @@
 package com.example.tests;
 
-    import com.aventstack.chaintest.plugins.ChainTestListener;
-    import com.example.pages.*;
-    import org.openqa.selenium.WebDriver;
-    import org.openqa.selenium.chrome.ChromeDriver;
-    import org.openqa.selenium.chrome.ChromeOptions;
-    import org.testng.annotations.AfterClass;
-    import org.testng.annotations.BeforeClass;
-    import org.testng.annotations.Listeners;
-    import org.testng.annotations.Test;
-    import org.openqa.selenium.remote.RemoteWebDriver;
-    import java.net.URL;
+import com.aventstack.chaintest.plugins.ChainTestListener;
+import com.example.pages.*;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
-    import java.io.IOException;
-    import java.nio.file.Files;
-    import java.nio.file.Path;
+import java.net.URL;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 @Listeners(ChainTestListener.class)
-    public class ECommerceTest {
-        private WebDriver driver;
-        private LoginPage loginPage;
-        private ProductsPage productsPage;
-        private CartPage cartPage;
-        private CheckoutPage checkoutPage;
-        private OverviewPage overviewPage;
-        private ConfirmationPage confirmationPage;
+public class ECommerceTest {
+    private WebDriver driver;
+    private LoginPage loginPage;
+    private ProductsPage productsPage;
+    private CartPage cartPage;
+    private CheckoutPage checkoutPage;
+    private OverviewPage overviewPage;
+    private ConfirmationPage confirmationPage;
 
-        @BeforeClass
-        public void setUp() throws IOException {
-            // Set up the WebDriver (e.g., ChromeDriver)
-            // Set Chrome options
-            ChromeOptions options = new ChromeOptions();
-            options.addArguments("--no-sandbox");
+    @BeforeClass
+    public void setUp() throws IOException {
+        // Set up the WebDriver (e.g., ChromeDriver)
+        // Set Chrome options
+        ChromeOptions options = new ChromeOptions();
+        // Initialize WebDriver
+        driver = new RemoteWebDriver(new URL("http://selenium-hub:4444/wd/hub"), options);
+        ChainTestListener.log("Launching the browser");
 
-            options.addArguments("--disable-dev-shm-usage");
+        // Initialize the page objects
+        loginPage = new LoginPage(driver);
+        productsPage = new ProductsPage(driver);
+        cartPage = new CartPage(driver);
+        checkoutPage = new CheckoutPage(driver);
+        overviewPage = new OverviewPage(driver);
+        confirmationPage = new ConfirmationPage(driver);
+    }
 
-            options.addArguments("--remote-allow-origins=*");
+    @Test
+    public void testECommerceFlowSingleProduct() {
+        // Login
+        loginPage.goTo();
+        ChainTestListener.log("Navigated to the login page");
+        loginPage.login("standard_user", "secret_");
+        ChainTestListener.log("Logged in with standard_user");
 
-            options.addArguments("--headless");
-            // Initialize WebDriver
-            driver = new RemoteWebDriver(new URL("http://selenium-hub:4444/wd/hub"), options);
-            ChainTestListener.log("Launching the browser");
+        // Add products to the cart
+        productsPage.addToCart();
+        ChainTestListener.log("Added Sauce Labs Backpack to the cart");
+        productsPage.goToCart();
+        ChainTestListener.log("Navigated to the cart");
 
-            // Initialize the page objects
-            loginPage = new LoginPage(driver);
-            productsPage = new ProductsPage(driver);
-            cartPage = new CartPage(driver);
-            checkoutPage = new CheckoutPage(driver);
-            overviewPage = new OverviewPage(driver);
-            confirmationPage = new ConfirmationPage(driver);
-        }
+        // Proceed to checkout
+        cartPage.checkout();
+        ChainTestListener.log("Proceeded to checkout");
 
-        @Test
-        public void testECommerceFlowSingleProduct() {
-            // Login
-            loginPage.goTo();
-            ChainTestListener.log("Navigated to the login page");
-            loginPage.login("standard_user", "secret_");
-            ChainTestListener.log("Logged in with standard_user");
+        // Fill in checkout details
+        checkoutPage.fillDetails("John", "Doe", "12345");
+        ChainTestListener.log("Filled in checkout details");
 
-            // Add products to the cart
-            productsPage.addToCart();
-            ChainTestListener.log("Added Sauce Labs Backpack to the cart");
-            productsPage.goToCart();
-            ChainTestListener.log("Navigated to the cart");
+        // Finish the order
+        overviewPage.finish();
+        ChainTestListener.log("Finished the order");
 
-            // Proceed to checkout
-            cartPage.checkout();
-            ChainTestListener.log("Proceeded to checkout");
+        // Verify order completion
+        confirmationPage.verifyOrderCompletion();
+        ChainTestListener.log("Verified order completion");
+    }
 
-            // Fill in checkout details
-            checkoutPage.fillDetails("John", "Doe", "12345");
-            ChainTestListener.log("Filled in checkout details");
+    @Test
+    public void testECommerceFlowTwoProducts() {
+        // Login
+        loginPage.goTo();
+        ChainTestListener.log("Navigated to the login page");
+        loginPage.login("standard_user", "secret_sauce");
+        ChainTestListener.log("Logged in with standard_user");
 
-            // Finish the order
-            overviewPage.finish();
-            ChainTestListener.log("Finished the order");
+        // Add products to the cart
+        productsPage.addTwoToCart();
+        ChainTestListener.log("Added Sauce Labs Backpack and Bike Light to the cart");
+        productsPage.goToCart();
+        ChainTestListener.log("Navigated to the cart");
 
-            // Verify order completion
-            confirmationPage.verifyOrderCompletion();
-            ChainTestListener.log("Verified order completion");
-        }
+        // Proceed to checkout
+        cartPage.checkout();
+        ChainTestListener.log("Proceeded to checkout");
 
-        @Test
-        public void testECommerceFlowTwoProducts() {
-            // Login
-            loginPage.goTo();
-            ChainTestListener.log("Navigated to the login page");
-            loginPage.login("standard_user", "secret_sauce");
-            ChainTestListener.log("Logged in with standard_user");
+        // Fill in checkout details
+        checkoutPage.fillDetails("John", "Doe", "12345");
+        ChainTestListener.log("Filled in checkout details");
 
-            // Add products to the cart
-            productsPage.addTwoToCart();
-            ChainTestListener.log("Added Sauce Labs Backpack and Bike Light to the cart");
-            productsPage.goToCart();
-            ChainTestListener.log("Navigated to the cart");
+        // Finish the order
+        overviewPage.finish();
+        ChainTestListener.log("Finished the order");
 
-            // Proceed to checkout
-            cartPage.checkout();
-            ChainTestListener.log("Proceeded to checkout");
+        // Verify order completion
+        confirmationPage.verifyOrderCompletion();
+        ChainTestListener.log("Verified order completion");
+    }
 
-            // Fill in checkout details
-            checkoutPage.fillDetails("John", "Doe", "12345");
-            ChainTestListener.log("Filled in checkout details");
-
-            // Finish the order
-            overviewPage.finish();
-            ChainTestListener.log("Finished the order");
-
-            // Verify order completion
-            confirmationPage.verifyOrderCompletion();
-            ChainTestListener.log("Verified order completion");
-        }
-
-        @AfterClass
-        public void tearDown() {
-            // Close the browser
-            if (driver != null) {
-                driver.quit();
-            }
+    @AfterClass
+    public void tearDown() {
+        // Close the browser
+        if (driver != null) {
+            driver.quit();
         }
     }
+}
