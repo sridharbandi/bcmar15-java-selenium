@@ -3,11 +3,6 @@ steps:
 - name: 'docker'
   args: ['run', '-d', '--name', 'browserless', '-p', '3000:3000', 'browserless/chrome']
 
-  # Wait for Chrome to be ready
-- name: 'curlimages/curl'
-  args: ['sh', '-c', 'until curl -s http://localhost:3000/json/version; do sleep 1; done']
-
-
   # Run Selenium tests with Maven using JDK 17
 - name: 'maven:3.8.5-openjdk-17'
   entrypoint: 'mvn'
