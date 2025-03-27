@@ -40,24 +40,12 @@ steps:
     dpkg -i google-chrome-stable_current_amd64.deb || apt-get install -f -y
     rm google-chrome-stable_current_amd64.deb
 
-    # Detect Chrome version
-    CHROME_VERSION=$(google-chrome --version | cut -d ' ' -f 3 | cut -d '.' -f 1)
-    echo "Detected Chrome Version: $CHROME_VERSION"
 
-    # Download matching ChromeDriver
-    CHROMEDRIVER_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION.0)
-    echo "Downloading ChromeDriver Version: $CHROMEDRIVER_VERSION"
+    echo "Detected Chrome Version: $(google-chrome --version | cut -d ' ' -f 3 | cut -d '.' -f 1)"
 
-    # Download and install ChromeDriver
-    wget -N http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip
-    unzip chromedriver_linux64.zip
-    mv chromedriver /usr/local/bin/chromedriver
-    chmod +x /usr/local/bin/chromedriver
-    rm chromedriver_linux64.zip
-
+  
     # Verify installations
     google-chrome --version
-    chromedriver --version
 
   # Run Selenium tests with Maven using JDK 17
 - name: 'maven:3.8.5-openjdk-17'
