@@ -17,12 +17,6 @@ steps:
         echo "Waiting for Selenium Hub to be ready..."
         # Wait for a few seconds to allow the services to start
         sleep 10
-        # Check if Selenium Hub is up and running using netcat (nc)
-        while ! nc -z selenium-hub 4444; do
-          echo "Waiting for Selenium Hub..."
-          sleep 5
-        done
-        echo "Selenium Hub is up!"
 
   # Step 3: Run Selenium tests with Maven using JDK 17
   - name: 'maven:3.8.5-openjdk-17'
