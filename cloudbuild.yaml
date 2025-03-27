@@ -1,29 +1,31 @@
 steps:
-# Step 1: Install Chrome and ChromeDriver
 - name: 'ubuntu'
   entrypoint: 'bash'
   args:
   - '-c'
   - |
-    # Update packages
+    # Update and install dependencies
     apt-get update -y
-    
-    # Install necessary dependencies
     apt-get install -y wget gnupg unzip curl
 
-    # Install Chrome
-    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
-    echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
-    apt-get update
-    apt-get install -y google-chrome-stable
+    # Get Chrome version
+    CHROME_VERSION=$(google-chrome --version | cut -d ' ' -f 3 | cut -d '.' -f 1)
+    echo "Detected Chrome Version: $CHROME_VERSION"
 
-    # Install ChromeDriver
-    CHROME_DRIVER_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE)
-    wget -N http://chromedriver.storage.googleapis.com/$${CHROME_DRIVER_VERSION}/chromedriver_linux64.zip
+    # Download matching ChromeDriver
+    CHROMEDRIVER_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION.0)
+    echo "Compatible ChromeDriver Version: $CHROMEDRIVER_VERSION"
+
+    # Download ChromeDriver
+    wget -N http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip
     unzip chromedriver_linux64.zip
     mv chromedriver /usr/local/bin/chromedriver
     chmod +x /usr/local/bin/chromedriver
     rm chromedriver_linux64.zip
+
+    # List versions to verify
+    google-chrome --version
+    chromedriver --version
 
   # Run Selenium tests with Maven using JDK 17
 - name: 'maven:3.8.5-openjdk-17'
